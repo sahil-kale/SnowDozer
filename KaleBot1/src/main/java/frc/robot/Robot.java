@@ -37,6 +37,7 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_oi = new OI();
+    //Robot.m_oi.initOI();
     m_DriveTrain = new SBSDriveTrain();
     Robot.m_DriveTrain.initDriveTrain();
     DriverStation.reportError("Subsystems Setup", true);

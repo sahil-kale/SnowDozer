@@ -111,6 +111,8 @@ public class SBSDriveTrain extends Subsystem {
 		SmartDashboard.putNumber("Accelerometer Z: ", m_accelerometer.getZ());
 		SmartDashboard.putNumber("Encoder RL:", m_encoderRL.getRaw());
 		SmartDashboard.putNumber("Encoder RR:", m_encoderRR.getRaw());
+		SmartDashboard.putNumber("Encoder RL Rate", m_encoderRL.getRate());
+		SmartDashboard.putNumber("Encoder RR Rate", m_encoderRR.getRate());
 		SmartDashboard.putNumber("Ultrasonic Distance", m_Ultrasonic.getRangeMM());
 		logToDashboardPDP();
 		

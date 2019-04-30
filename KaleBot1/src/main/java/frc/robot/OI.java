@@ -8,6 +8,8 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.commands.CmdResetSensors;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -42,6 +44,7 @@ public class OI {
   // until it is finished as determined by it's isFinished method.
   // button.whenReleased(new ExampleCommand());
 
+  
   public Joystick joy1 = new Joystick(0);
 
   /**
@@ -93,4 +96,9 @@ public class OI {
   {
 
   }
+
+  public void initOI()
+	{
+		SmartDashboard.putData("Reset Sensors", new CmdResetSensors());
+	}
 }
