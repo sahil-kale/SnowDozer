@@ -43,6 +43,7 @@ public class SBSDriveTrain extends Subsystem {
 	double masterSensitivity = 1.0;
 	public void initDriveTrain()
 	{
+		m_motorRL.setInverted(true);
 		m_Ultrasonic.setAutomaticMode(true);
 		m_encoderRL.setMaxPeriod(.1);
 		m_encoderRL.setMinRate(10);
@@ -114,6 +115,11 @@ public class SBSDriveTrain extends Subsystem {
 		SmartDashboard.putNumber("Encoder RL Rate", m_encoderRL.getRate());
 		SmartDashboard.putNumber("Encoder RR Rate", m_encoderRR.getRate());
 		SmartDashboard.putNumber("Ultrasonic Distance", m_Ultrasonic.getRangeMM());
+		double displacementRL = m_encoderRL.getRaw() * (15.24/100);
+		double displacementRR = m_encoderRR.getRaw() * (15.24/100);
+		SmartDashboard.putNumber("Displacement RL", displacementRL);
+		SmartDashboard.putNumber("Displacement RR", displacementRR);
+
 		logToDashboardPDP();
 		
 	}

@@ -38,7 +38,7 @@ public class CmdTeleopDrive extends Command {
       double throttle = Robot.m_oi.normalize(Robot.m_oi.joy1.getRawAxis(0), 0.07);
       double angle = Robot.m_oi.normalize(Robot.m_oi.joy1.getRawAxis(1), 0.07);
 
-       Robot.m_DriveTrain.ArcadeDrive(throttle, angle);
+       Robot.m_DriveTrain.ArcadeDrive(-throttle, angle);
     }
     
   }
