@@ -7,55 +7,63 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
-public class CmdTeleopDrive extends Command {
-  public CmdTeleopDrive() {
+public class CmdDriveFwd extends Command {
+
+  private double throttle, timer;
+
+  public CmdDriveFwd(double m_throttle, double m_timer) {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.m_DriveTrain);
+    throttle = m_throttle;
+    timer = m_timer;
   }
 
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    DriverStation.reportError("Triggered", true);
+    setTimeout(timer);
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(Robot.m_oi.joy1.getRawButton(2))
-    {
-      double servo1Speed = 0.5*Robot.m_oi.normalize(Robot.m_oi.joy1.getRawAxis(1), 0.07)+0.5;
-      double servo2Speed = 0.5*Robot.m_oi.normalize(Robot.m_oi.joy1.getRawAxis(0), 0.07)+0.5;
-      Robot.m_DriveTrain.setServo1(servo1Speed);
-      Robot.m_DriveTrain.setServo2(servo2Speed);
+    //Robot.m_DriveTrain.TankDrive(throttle, throttle);
+    double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+    double tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
+    double kSteer = 0.04;
+    double angle = tx*kSteer;
+    double throttle = Robot.m_oi.joy1.getRawAxis(3) * -1/2 + 0.5;
 
+    if(tv == 1.0)
+    {
+      Robot.m_DriveTrain.ArcadeDrive(throttle, angle);
+      SmartDashboard.putNumber("Angle", angle);
     }
     else
     {
-      double throttle = -Robot.m_oi.normalize(Robot.m_oi.joy1.getRawAxis(1), 0.07);
-      double angle = Robot.m_oi.normalize(Robot.m_oi.joy1.getRawAxis(0), 0.07);
-      double sensitivity = Robot.m_oi.joy1.getRawAxis(3) * -1/2 + 0.5;
-      SmartDashboard.putNumber("Throttle: ", throttle);
-      SmartDashboard.putNumber("Angle: ", angle);
-
-       Robot.m_DriveTrain.ArcadeDrive(throttle * sensitivity, angle * sensitivity);
+      Robot.m_DriveTrain.ArcadeDrive(0, 0);
     }
-    
   }
 
   // Make this return true when this Command no longer needs to run execute()
   @Override
   protected boolean isFinished() {
-    return false;
+    DriverStation.reportError("Finished", true);
+    return isTimedOut();
   }
 
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    Robot.m_DriveTrain.TankDrive(0, 0);
   }
 
   // Called when another command which requires one or more of the same

@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.PowerDistributionPanel;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.SpeedController;
-import edu.wpi.first.wpilibj.Ultrasonic;
+//import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
@@ -31,9 +31,9 @@ public class SBSDriveTrain extends Subsystem {
   public SpeedController m_motorRR = new VictorSP(1);
   public Servo m_Servo1 = new Servo(2);
 	public Servo m_Servo2 = new Servo(3);
-	public Encoder m_encoderRL = new Encoder(8,9, false, Encoder.EncodingType.k4X);
-	public Encoder m_encoderRR = new Encoder(0,1, false, Encoder.EncodingType.k4X);
-	public Ultrasonic m_Ultrasonic = new Ultrasonic(2, 3);
+	public Encoder m_encoderRR = new Encoder(8,9, false, Encoder.EncodingType.k4X);
+	public Encoder m_encoderRL = new Encoder(0,1, false, Encoder.EncodingType.k4X);
+	//public Ultrasonic m_Ultrasonic = new Ultrasonic(2, 3);
 	public PowerDistributionPanel m_pdp = new PowerDistributionPanel();
 
   private DifferentialDrive m_transmission = new DifferentialDrive(m_motorRL, m_motorRR);
@@ -43,8 +43,8 @@ public class SBSDriveTrain extends Subsystem {
 	double masterSensitivity = 1.0;
 	public void initDriveTrain()
 	{
-		m_motorRL.setInverted(true);
-		m_Ultrasonic.setAutomaticMode(true);
+		//m_motorRR.setInverted(true);
+		//m_Ultrasonic.setAutomaticMode(true);
 		m_encoderRL.setMaxPeriod(.1);
 		m_encoderRL.setMinRate(10);
 		m_encoderRL.setDistancePerPulse(5);
@@ -107,6 +107,7 @@ public class SBSDriveTrain extends Subsystem {
 	{
 		SmartDashboard.putNumber("motorRL: ", m_motorRL.get());
 		SmartDashboard.putNumber("motorRR: ", m_motorRR.get());
+		
 		SmartDashboard.putNumber("Accelerometer X: ", m_accelerometer.getX());
 		SmartDashboard.putNumber("Accelerometer Y: ", m_accelerometer.getY());
 		SmartDashboard.putNumber("Accelerometer Z: ", m_accelerometer.getZ());
@@ -114,12 +115,10 @@ public class SBSDriveTrain extends Subsystem {
 		SmartDashboard.putNumber("Encoder RR:", m_encoderRR.getRaw());
 		SmartDashboard.putNumber("Encoder RL Rate", m_encoderRL.getRate());
 		SmartDashboard.putNumber("Encoder RR Rate", m_encoderRR.getRate());
-		SmartDashboard.putNumber("Ultrasonic Distance", m_Ultrasonic.getRangeMM());
-		double displacementRL = m_encoderRL.getRaw() * (15.24/100);
-		double displacementRR = m_encoderRR.getRaw() * (15.24/100);
-		SmartDashboard.putNumber("Displacement RL", displacementRL);
-		SmartDashboard.putNumber("Displacement RR", displacementRR);
-
+		//SmartDashboard.putNumber("Ultrasonic Distance", m_Ultrasonic.getRangeMM());
+		SmartDashboard.putNumber("Displacement RL", m_encoderRL.getDistance());
+		SmartDashboard.putNumber("Displacement RR", m_encoderRR.getDistance());
+		
 		logToDashboardPDP();
 		
 	}

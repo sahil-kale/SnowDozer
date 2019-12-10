@@ -9,17 +9,16 @@ package frc.robot;
 
 import edu.wpi.cscore.UsbCamera;
 import edu.wpi.first.cameraserver.CameraServer;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.SpeedController;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.VictorSP;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.CmdAutoDriveFwd;
-import frc.robot.commands.CmdDriveFwd;
-import frc.robot.commands.CmdLimelightTest;
-import frc.robot.subsystems.SBSDriveTrain;
+import frc.robot.commands.ExampleCommand;
+import frc.robot.subsystems.ExampleSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -29,12 +28,14 @@ import frc.robot.subsystems.SBSDriveTrain;
  * project.
  */
 public class Robot extends TimedRobot {
+  public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
+  public SpeedController motorL;
+  public SpeedController motorR;
   public static OI m_oi;
-  public static SBSDriveTrain m_DriveTrain;
   UsbCamera camera;
+
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
-
 
   /**
    * This function is run when the robot is first started up and should be
@@ -43,22 +44,13 @@ public class Robot extends TimedRobot {
   @Override
   public void robotInit() {
     m_oi = new OI();
-    //Robot.m_oi.initOI();
-    m_DriveTrain = new SBSDriveTrain();
-    Robot.m_DriveTrain.initDriveTrain();
-    DriverStation.reportError("Subsystems Setup", true);
-    
-    camera = CameraServer.getInstance().startAutomaticCapture();
-    camera.setResolution(720, 480);
-    camera.setFPS(10);
-    DriverStation.reportError("Vision Setup", true);
-
-    m_chooser.setDefaultOption("Default Auto", new CmdAutoDriveFwd());
+    motorL = new VictorSP(0);
+    motorR = new VictorSP(1);
+    m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
-    m_autonomousCommand = new CmdLimelightTest();
-
-      
+   
+    
   }
 
   /**
@@ -71,7 +63,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    logToDumbDashboard();
   }
 
   /**
@@ -100,18 +91,20 @@ public class Robot extends TimedRobot {
    * to the switch structure below with additional strings & commands.
    */
   @Override
-  public void autonomousInit() 
-  {
+  public void autonomousInit() {
+    m_autonomousCommand = m_chooser.getSelected();
+
     /*
-    //m_autonomousCommand = m_chooser.getSelected();
+     * String autoSelected = SmartDashboard.getString("Auto Selector",
+     * "Default"); switch(autoSelected) { case "My Auto": autonomousCommand
+     * = new MyAutoCommand(); break; case "Default Auto": default:
+     * autonomousCommand = new ExampleCommand(); break; }
+     */
+
+    // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.start();
     }
-    */
-    //new CmdLimelightTest();
-
-    
-
   }
 
   /**
@@ -120,22 +113,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousPeriodic() {
     Scheduler.getInstance().run();
-    DriverStation.reportError("Executing", true);
-    double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
-    double tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
-    double kSteer = 0.045;
-    //double throttle = Robot.m_oi.joy1.getRawAxis(3) * -1/2 + 0.5;
-    double throttle = 0;
-
-    if(tv == 1.0)
-    {
-      Robot.m_DriveTrain.ArcadeDrive(throttle, tx * kSteer);
-      SmartDashboard.putNumber("Test1", tx * kSteer);
-    }
-    else
-    {
-      Robot.m_DriveTrain.ArcadeDrive(0, 0);
-    }
   }
 
   @Override
@@ -144,12 +121,11 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    Robot.m_DriveTrain.resetSensors();
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-
+    motorL.set(1);
+    motorR.set(1);
   }
 
   /**
@@ -166,15 +142,4 @@ public class Robot extends TimedRobot {
   @Override
   public void testPeriodic() {
   }
-
-  public void logToDumbDashboard()
-  {
-    Robot.m_DriveTrain.logToDashboardDT();
-    Robot.m_oi.logToDashboardOI();
-    SmartDashboard.putNumber("tV", NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0));
-    SmartDashboard.putNumber("tX", NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0));
-    //SmartDashboard.putNumber("Center X:", centerX);
-  }
 }
-
-

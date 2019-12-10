@@ -7,10 +7,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.CmdResetSensors;
-
 /**
  * This class is the glue that binds the controls on the physical operator
  * interface to the commands and command groups that allow control of the robot.
@@ -43,62 +39,4 @@ public class OI {
   // Start the command when the button is released and let it run the command
   // until it is finished as determined by it's isFinished method.
   // button.whenReleased(new ExampleCommand());
-
-  
-  public Joystick joy1 = new Joystick(0);
-
-  /**
-	 * Allows for normalizing a joystick axis
-	 * 
-	 * 
-	 * @param input Joystick Input (double)
-	 * @param deadzone The deadzone (double - POSITIVE)
-	 * @return normalized input
-	 */
-
-  double sensitivity = 1;//Settings.get("Sen", 1);
-  
-	public double normalize(double input, double deadzone) //Normalize inputs to prevent deadzone errors
-	{
-		if(input < deadzone && input > -deadzone)
-		{
-			return 0;
-		}
-		else
-		{
-			return input * sensitivity;
-		}
-	}
-	
-	
-	/**
-	 * Allows for normalizing a joystick around a new centrepoint (e.g. Joystick may be centered slightly further on one side,
-	 * and large deadzones are inconvenient
-	 * 
-	 * @param input the input provided
-	 * @param deadzone the deadzone around the centrepoint
-	 * @param centrepoint the centrepoint for the joystick
-	 * @return normalized input with new centrepoint
-	 */
-	public double normalizeWithNewCentre(double input, double deadzone, double centrepoint)
-	{
-		if(input < (deadzone + centrepoint) && input > (-deadzone + centrepoint))
-		{
-			return 0;
-		}
-		else
-		{
-			return input;
-		}
-  }
-  
-  public void logToDashboardOI()
-  {
-		SmartDashboard.putNumber("Sensitivity", joy1.getRawAxis(3));
-  }
-
-  public void initOI()
-	{
-		//SmartDashboard.putData("Reset Sensors", new CmdResetSensors());
-	}
 }

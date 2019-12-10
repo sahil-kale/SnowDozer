@@ -7,12 +7,13 @@
 
 package frc.robot.commands;
 
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 
-public class CmdTeleopDrive extends Command {
-  public CmdTeleopDrive() {
+public class CmdLimelightTest extends Command {
+  public CmdLimelightTest() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
     requires(Robot.m_DriveTrain);
@@ -26,25 +27,21 @@ public class CmdTeleopDrive extends Command {
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    if(Robot.m_oi.joy1.getRawButton(2))
-    {
-      double servo1Speed = 0.5*Robot.m_oi.normalize(Robot.m_oi.joy1.getRawAxis(1), 0.07)+0.5;
-      double servo2Speed = 0.5*Robot.m_oi.normalize(Robot.m_oi.joy1.getRawAxis(0), 0.07)+0.5;
-      Robot.m_DriveTrain.setServo1(servo1Speed);
-      Robot.m_DriveTrain.setServo2(servo2Speed);
+    DriverStation.reportError("Executing", true);
+    double tx = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
+    double tv = NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0);
+    double kSteer = 0.08;
+    double throttle = Robot.m_oi.joy1.getRawAxis(3) * -1/2 + 0.5;
 
+    if(tv == 1.0)
+    {
+      Robot.m_DriveTrain.ArcadeDrive(throttle, tx * kSteer);
     }
     else
     {
-      double throttle = -Robot.m_oi.normalize(Robot.m_oi.joy1.getRawAxis(1), 0.07);
-      double angle = Robot.m_oi.normalize(Robot.m_oi.joy1.getRawAxis(0), 0.07);
-      double sensitivity = Robot.m_oi.joy1.getRawAxis(3) * -1/2 + 0.5;
-      SmartDashboard.putNumber("Throttle: ", throttle);
-      SmartDashboard.putNumber("Angle: ", angle);
-
-       Robot.m_DriveTrain.ArcadeDrive(throttle * sensitivity, angle * sensitivity);
+      Robot.m_DriveTrain.ArcadeDrive(0, 0);
     }
-    
+
   }
 
   // Make this return true when this Command no longer needs to run execute()
