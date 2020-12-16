@@ -10,4 +10,4 @@ In Jan 2019, I had just started to drive to school rather than take the bus. Thi
 - PWM & CAN motor controllers used to send signals
 
 ## Dozer, just after completion:
-![Dozer Photo](IMG_3390.jpg)
+![Dozer Photo](IMG_3390.JPG)
