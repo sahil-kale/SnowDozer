@@ -9,5 +9,5 @@ In Jan 2019, I had just started to drive to school rather than take the bus. Thi
 - 1-axis camera gimbal for the operator to see the surroundings
 - PWM & CAN motor controllers used to send signals
 
-## Dozer, just after completion:
+## Dozer during preliminary trials:
 ![Dozer Photo](IMG_3390.JPG)
